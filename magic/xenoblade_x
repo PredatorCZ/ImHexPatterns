@@ -1,0 +1,21 @@
+# Binary CSV
+0 belong 0x43535642 Xenoblade X Binary CSV
+!:mime xenoblade-x/csvb
+
+# Packed Data
+0 belong 0x41444150
+>4 belong 4100 Xenoblade X Packed Data
+!:mime xenoblade-x/pac
+
+# Encryped Binary Data Collection
+(8.L) belong 0x42444154 Xenoblade X Encryped Binary Data Collection
+!:mime xenoblade-x/bdat-collection-encrypted
+
+# Binary Data Collection
+(8.l+8) belong 0x42444154 Xenoblade X Binary Data Collection
+!:mime xenoblade-x/bdat-collection
+
+# Action Script
+0 belong 0x6D636100
+>40 belong 0x10A00 Xenoblade X Action Script
+!:mime xenoblade-x/action-script

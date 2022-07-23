@@ -1,0 +1,3 @@
+*.pat linguist-language=Rust
+*.hexpat linguist-language=Rust
+magic/* linguist-language=Julia
