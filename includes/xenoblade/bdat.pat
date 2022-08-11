@@ -2,6 +2,7 @@
 #include <std/io.pat>
 
 u32 headerBegin;
+bool encrypted;
 
 fn header_base(u16) {
     return headerBegin;
@@ -30,24 +31,22 @@ struct DataDesc {
     if (baseType == BaseType::Flag) {
         u8 flagIndex;
         u16 null;
-        BE u16 value;
-        BE u16 parentDesc;
+        u16 value;
+        u16 parentDesc;
     } else {
         DataType dataType;
-        BE u16 offset;
+        u16 offset;
     }
 
     if (baseType == BaseType::Array) {
-        BE u16 arrayLen;
+        u16 arrayLen;
     }
 };
 
 struct KeyDesc {
     DataDesc *desc : BE u16[[pointer_base("header_base")]];
-    BE u16 null;
-    BE u16 nameOffset;
-
-    char name[] @headerBegin + nameOffset;
+    u16 null;
+    char *name[] : BE u16[[pointer_base("header_base")]];
 
     if (desc.baseType == BaseType::Flag) {
         std::print("Flag{}[{}] {} = {}", desc.parentDesc, desc.flagIndex, name, desc.value);
@@ -73,8 +72,13 @@ struct Header {
     u16 keyDescsOffset;
     u16 numKeyDescs;
 
-    u16 unk1Data[unk1Size] @addressof(unk1Offset) + unk1Offset;
-    KeyDesc keyDescs[numKeyDescs] @addressof(keyDescsOffset) + keyDescsOffset;
-    //KeyValue keyValues[numKeyValues] @addressof(keyValuesOffset) + keyValuesOffset;
-    u8 keyValueData[numKeyValues * kvBlockSize] @addressof(keyValuesOffset) + keyValuesOffset;
+    if (encrypted) {
+        BE u16 unk1Data[unk1Size] @headerBegin + unk1Offset;
+        u8 keyValueData[numKeyValues * kvBlockSize] @headerBegin + keyValuesOffset;
+    } else {
+        BE u16 unk1Data[unk1Size] @addressof(unk1Offset) + unk1Offset;
+        BE KeyDesc keyDescs[numKeyDescs] @addressof(keyDescsOffset) + keyDescsOffset;
+        //KeyValue keyValues[numKeyValues] @addressof(keyValuesOffset) + keyValuesOffset;
+        u8 keyValueData[numKeyValues * kvBlockSize] @addressof(keyValuesOffset) + keyValuesOffset;
+    }
 };
