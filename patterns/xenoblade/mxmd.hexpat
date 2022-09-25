@@ -4,50 +4,8 @@
 #pragma array_limit 10000
 #pragma pattern_limit 10000
 
-fn Pp(u128) {
-	return addressof(parent.parent);
-};
-
-fn p(u128) {
-	return addressof(parent);
-};
-
-fn t(u128) {
-	return addressof(this);
-};
-
-struct CString {
-	char text[];
-};
-
-struct CASMTTexture {
-	u32 unk;
-	u32 dataSize;
-	u32 dataOffset;
-	CString *name : u32 [[inline, pointer_base("Pp")]];
-};
-
-struct CASMTGroup {
-	u32 numTextures;
-	CASMTTexture *textures[numTextures] : u32[[inline, pointer_base("p")]];
-	u32 unk;
-	u32 nameBufferSize;
-};
-
-struct CASMTGroupPtr {
-	CASMTGroup *group : u32 [[inline, pointer_base("Pp")]];
-};
-
-struct CASMTHeader {
-	u32 data;
-	u32 numGroups;
-
-	CASMTGroupPtr group[2] [[inline]];
-	u16 *ids0[group[0].group.numTextures] : u32 [[pointer_base("p")]];
-	u16 *ids1[group[1].group.numTextures] : u32 [[pointer_base("p")]];
-	u32 datasOffsets[2] [[inline]];
-	u32 dataSizes[2] [[inline]];
-};
+#include "xenoblade/mdo.pat"
+#include "xenoblade/texres.pat"
 
 struct ShaderBinding {
 	u16 unk0;
@@ -164,60 +122,6 @@ struct MaterialsHeader {
 	float floats[numFloats] @ addressof(this) + floatsPtr;
 	u32 uints[numUints] @ addressof(this) + uintsPtr;
 };
-
-struct Primitive {
-	u32 flags;
-	u32 skinDescriptor;
-	u32 bufferID;
-	u32 UVFacesID;
-	u32 unk00;
-	u32 materialID;
-	u32 null00[2];
-	u32 gibID;
-	u32 null01;
-	u32 meshFacesID;
-	u32 null02[5];
-  };
-
-struct Mesh {
-	u32 primitivesPtr;
-	u32 numPrimitives;
-	u32 null0;
-	float bboxMax[3];
-	float bboxMin[3];
-	float boundingRadius;
-	u32 null[7];
-
-	Primitive primitives[numPrimitives] @ addressof(parent) + primitivesPtr;
-};
-
-struct Model {
-	float bboxMin[3];
-	float bboxMax[3];
-	u32 meshesPtr;
-	u32 numMeshes;
-	u32 skins;
-	u32 numSkins;
-	u32 unk00[3];
-	u32 attachmentsOffset2;
-	u32 unk01[6]; // TODO
-	u32 bones;
-	u32 numBones;
-	u32 floats;
-	u32 numFloat;
-	u32 unk02;
-	u32 boneNames;
-	u32 numBoneNames;
-	u32 unk03;
-	u32 attachmentsOffset;
-	u32 attachmentsCount;
-	u32 unkOffset00;
-	u32 unk04[4];
-	u32 unkOffset01;
-	u32 unk05; // TODO
-
-	Mesh meshes[numMeshes] @ addressof(this) + meshesPtr;
-  };
 
 struct Header {
 	u32 id;
