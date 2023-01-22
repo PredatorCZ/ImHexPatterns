@@ -1,6 +1,7 @@
 #pragma endian big
 #include "xenoblade/mdo.pat"
 #include "xenoblade/texres.pat"
+#include "xenoblade/mdos.pat"
 
 struct Material {
     char *name[] : u32 [[pointer_base("Pp")]];
